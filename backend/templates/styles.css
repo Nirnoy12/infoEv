@@ -1,0 +1,92 @@
+/* Base styles /
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/ Leaflet map container /
+#map {
+  height: 100vh;
+  width: 100vw;
+  z-index: 1;
+}
+
+/ Top navigation bar /
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 999;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.navbar h1 {
+  font-size: 20px;
+  color: #00FFAD;
+  margin: 0;
+}
+
+.navbar-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.navbar-buttons button {
+  background-color: #1f1f1f;
+  border: 1px solid #00FFAD;
+  color: #00FFAD;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/ Speedometer display /
+.speedometer {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 20px;
+  color: #00FFAD;
+  font-weight: bold;
+  z-index: 999;
+  box-shadow: 0 0 6px rgba(0,255,173,0.4);
+}
+
+/ Floating action buttons */
+.action-buttons {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 999;
+}
+
+.action-buttons button {
+  background-color: #1f1f1f;
+  border: 1px solid #00FFAD;
+  color: #00FFAD;
+  padding: 10px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(0,255,173,0.3);
+}

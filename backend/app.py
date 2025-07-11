@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 import requests
 from geopy.distance import geodesic
@@ -10,6 +10,7 @@ socketio = SocketIO(app)
 def index():
     return render_template("index.html")
 
+# 📡 Handle live location updates from frontend
 @socketio.on('location_update')
 def handle_location(data):
     try:
@@ -37,7 +38,7 @@ def handle_location(data):
 
         ev_data = []
         for s in stations:
-            info = s['AddressInfo']
+            info = s.get('AddressInfo', {})
             station_lat = info.get('Latitude')
             station_lon = info.get('Longitude')
 
@@ -51,14 +52,38 @@ def handle_location(data):
                     'distance': distance
                 })
 
-        # Sort and keep top 10 nearest stations
+        # Sort by closest and keep top 10
         ev_data = sorted(ev_data, key=lambda x: x['distance'])[:10]
         emit('ev_stations', {'stations': ev_data})
-        print("✅ Sent EV stations to frontend.")
+        print(f"✅ Sent {len(ev_data)} EV stations to frontend.")
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"❌ Error handling location update: {e}")
         emit('ev_stations', {'stations': []})
+
+# 🤖 Future AI Optimization Endpoint (Mock for now)
+@app.route('/optimize', methods=['POST'])
+def optimize_station():
+    try:
+        data = request.json
+        name = data.get('name')
+        lat = data.get('lat')
+        lon = data.get('lon')
+
+        print(f"🔍 AI optimization requested for {name} ({lat}, {lon})")
+
+        # TODO: Replace this logic with actual ML/AI model
+        optimized_result = {
+            "slot": "14:30 - 15:00",
+            "eta": 12,  # minutes
+            "swaps_available": 3
+        }
+
+        return jsonify(optimized_result)
+
+    except Exception as e:
+        print(f"❌ Optimization error: {e}")
+        return jsonify({"error": "Failed to optimize station"}), 500
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
