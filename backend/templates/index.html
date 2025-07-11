@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>⚡ EV ChargeSmart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Leaflet & Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background-color: #00aaff;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        #map-container {
+            position: relative;
+            padding: 1rem;
+        }
+
+        #map {
+            width: 70%;
+            height: 250px; /* smaller by default */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            transition: height 0.3s;
+        }
+
+        #map.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            border-radius: 0;
+        }
+
+        #fullscreen-btn {
+            position: absolute;
+            top: 20px;
+            right: 100px;
+            z-index: 1001;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 6px rgba(0,0,0,0.2);
+        }
+
+        #speed-display {
+            position: absolute;
+            top: 90px;
+            left: 70px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>⚡ EV ChargeSmart: Live EV Station Tracker</header>
+
+    <div id="speed-display">Speed: -- km/h</div>
+
+    <div id="map-container">
+        <button id="fullscreen-btn">🔲 Expand</button>
+        <div id="map"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <script>
+        // Full screen toggle logic
+        const mapDiv = document.getElementById('map');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+        fullscreenBtn.addEventListener('click', () => {
+            mapDiv.classList.toggle('fullscreen');
+            setTimeout(() => {
+                map.invalidateSize(); // Recalculate map size when toggling
+            }, 300);
+        });
+    </script>
+</body>
+</html>
