@@ -1,6 +1,7 @@
 flask
+flask-socketio
+flask-cors
 requests
-folium
-flask-cors 
-tensorflow 
+geopy
+tensorflow
 numpy

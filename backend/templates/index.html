@@ -207,54 +207,19 @@
       border-radius: 14px;
       padding: 1.1rem 1.5rem;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 0.5rem;
       box-shadow: 0 2px 12px rgba(0,0,0,0.10);
       border: 1px solid var(--stat-border);
-    }
-    .station-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
     }
     .station-title {
       font-weight: 700;
       color: #fff;
       font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
     .station-meta {
       color: var(--muted);
       font-size: 0.98rem;
-    }
-    .station-status {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-    }
-    .wait-time {
-      color: #fff;
-      font-weight: 600;
-      font-size: 1rem;
-      background: var(--stat-bg);
-      border-radius: 8px;
-      padding: 0.3rem 0.8rem;
-      margin-right: 0.5rem;
-    }
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 0.3rem;
-    }
-    .status-limited {
-      background: var(--warning);
-    }
-    .status-available {
-      background: var(--success);
     }
     @media (max-width: 700px) {
       .hero-title { font-size: 2rem; }
@@ -265,20 +230,14 @@
     }
   </style>
 </head>
-<div class="speedometer" id="speed-display">Speed: 0 km/h</div>
-
-<div id="vehicle-popup" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
- background:var(--card-bg); border:1px solid var(--stat-border); padding:1rem 2rem; border-radius:12px;
- color:var(--text); z-index:999; box-shadow:0 0 20px rgba(0,0,0,0.3);">
-  <h3>🚗 My Vehicle</h3>
-  <p>Battery: 85%</p>
-  <p>Range: 220km</p>
-  <button onclick="document.getElementById('vehicle-popup').style.display='none'"
-          style="margin-top:10px; padding:6px 12px; background:var(--button-bg); color:white; border:none;
-           border-radius:6px;">Close</button>
-</div>
 
 <body>
+  <select id="vehicle-type" style="position: fixed; top: 80px; right: 20px; z-index: 1000;">
+    <option value="Car">🚗 Car</option>
+    <option value="Bike">🏍️ Bike</option>
+    <option value="Scooter">🛵 Scooter</option>
+  </select>
+
   <div class="header">
     <div class="header-left">
       <div class="logo">⚡</div>
@@ -294,24 +253,16 @@
       <button class="vehicle-btn">🚗 My Vehicle</button>
     </div>
   </div>
+
   <div class="hero">
     <div class="hero-title">Smart EV Charging <span class="accent">Made Simple</span></div>
     <div class="hero-desc">
       Reduce wait times, optimize routes, and find the perfect charging station with our AI-powered platform. Experience the future of electric vehicle infrastructure.
     </div>
     <div class="stats">
-      <div class="stat-card">
-        <div class="stat-value" id="avg-wait-time">--</div>
-        <div class="stat-label">Avg Wait Time</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="active-stations">--</div>
-        <div class="stat-label">Active Stations</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">1.2k</div>
-        <div class="stat-label">Daily Users</div>
-      </div>
+      <div class="stat-card"><div class="stat-value" id="avg-wait-time">--</div><div class="stat-label">Avg Wait Time</div></div>
+      <div class="stat-card"><div class="stat-value" id="active-stations">--</div><div class="stat-label">Active Stations</div></div>
+      <div class="stat-card"><div class="stat-value">1.2k</div><div class="stat-label">Daily Users</div></div>
     </div>
     <div class="nav-btns">
       <button class="nav-btn selected">📍 Station Map</button>
@@ -319,32 +270,14 @@
       <button class="nav-btn">🤖 AI Predictions</button>
     </div>
   </div>
+
   <div class="section-title">Nearby EV Stations</div>
   <div class="map-section">
     <div id="map"></div>
-    <div class="stations-list">
-      <div class="station-card">
-        <div class="station-info">
-          <div class="station-title">⚡ Central Mall Charging Hub</div>
-          <div class="station-meta">0.8km away • 150kW</div>
-        </div>
-        <div class="station-status">
-          <span class="wait-time">5min wait</span>
-          <span class="status-dot status-limited"></span>Limited
-        </div>
-      </div>
-      <div class="station-card">
-        <div class="station-info">
-          <div class="station-title">🔋 Metro Station Battery Swap</div>
-          <div class="station-meta">1.2km away • 50kW</div>
-        </div>
-        <div class="station-status">
-          <span class="wait-time">12min wait</span>
-          <span class="status-dot status-limited"></span>Limited
-        </div>
-      </div>
-    </div>
+    <!-- ✅ Dynamic AI insights inserted here -->
+    <div id="ai-insights" class="stations-list"></div>
   </div>
+
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
