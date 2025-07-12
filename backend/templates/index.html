@@ -312,6 +312,39 @@
       #map, .stations-list { width: 98vw; max-width: 100vw; }
       .section-title { margin-left: 4vw; }
     }
+  .leaflet-routing-container {
+  background-color: var(--card-bg) !important;
+  color: var(--text) !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.leaflet-routing-container h2,
+.leaflet-routing-container .leaflet-routing-alt h3 {
+  color: var(--text) !important;
+}
+
+.leaflet-routing-container .leaflet-routing-alt,
+.leaflet-routing-container .leaflet-routing-alt tr,
+.leaflet-routing-container .leaflet-routing-alt td,
+.leaflet-routing-container .leaflet-routing-alt th {
+  background-color: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+
+.leaflet-routing-container .leaflet-routing-alt td.leaflet-routing-icon {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+.leaflet-routing-container .leaflet-routing-alt td.leaflet-routing-instruction-text {
+  color: var(--text) !important;
+}
+
+.leaflet-routing-container .leaflet-routing-alt td.leaflet-routing-distance {
+  color: var(--muted) !important;
+}
+
   </style>
 </head>
 
