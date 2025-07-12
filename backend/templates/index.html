@@ -65,7 +65,7 @@
     .header-title {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
     }
     .header-subtitle {
       font-size: 0.95rem;
@@ -291,7 +291,7 @@
     }
     .fullscreen-exit-btn {
       position: fixed;
-      top: 24px;
+      bottom: 24px;
       right: 32px;
       z-index: 4000;
       background: var(--button-bg);
@@ -313,36 +313,36 @@
       .section-title { margin-left: 4vw; }
     }
   .leaflet-routing-container {
-  background-color: var(--card-bg) !important;
-  color: var(--text) !important;
+  background-color: #fff !important;
+  color: #111 !important;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .leaflet-routing-container h2,
 .leaflet-routing-container .leaflet-routing-alt h3 {
-  color: var(--text) !important;
+  color: #111 !important;
 }
 
 .leaflet-routing-container .leaflet-routing-alt,
 .leaflet-routing-container .leaflet-routing-alt tr,
 .leaflet-routing-container .leaflet-routing-alt td,
 .leaflet-routing-container .leaflet-routing-alt th {
-  background-color: var(--card-bg) !important;
-  color: var(--text) !important;
+  background-color: #fff !important;
+  color: #111 !important;
 }
 
 .leaflet-routing-container .leaflet-routing-alt td.leaflet-routing-icon {
-  filter: brightness(0) invert(1);
+  filter: none !important;
   opacity: 0.9;
 }
 
 .leaflet-routing-container .leaflet-routing-alt td.leaflet-routing-instruction-text {
-  color: var(--text) !important;
+  color: #111 !important;
 }
 
 .leaflet-routing-container .leaflet-routing-alt td.leaflet-routing-distance {
-  color: var(--muted) !important;
+  color: #444 !important;
 }
 
   </style>
@@ -361,7 +361,7 @@
 </div>
 
 <body>
-  <select id="vehicle-type" style="position: fixed; top: 80px; right: 20px; z-index: 1000;">
+  <select id="vehicle-type" style="position: fixed; top: 80px; right: 20px; z-index: 1000; font-size: 1.1rem; padding: 0.8rem 1.2rem; border-radius: 8px; border: 1px solid var(--stat-border); background: var(--card-bg); color: var(--text); min-width: 140px;">
     <option value="Car">🚗 Car</option>
     <option value="Bike">🏍️ Bike</option>
     <option value="Scooter">🛵 Scooter</option>
@@ -376,7 +376,7 @@
       </div>
     </div>
     <div class="header-controls">
-      <div class="stations-online"><span class="status-dot status-available"></span>24 stations online</div>
+      <div class="stations-online"><span class="status-dot status-available"></span>Professor Garfield</div>
       <button class="theme-toggle" title="Light Mode">🌞</button>
       <button class="theme-toggle" title="Dark Mode">🌙</button>
       <button class="vehicle-btn">🚗 My Vehicle</button>
@@ -399,7 +399,7 @@
     <div class="section-title">EV Stations Close To You</div>
     <button id="fullscreen-map-btn" class="nav-btn" style="margin-top: 1rem;">Full Screen Map</button>
   </div>
-  <div class="ai-predictions-title" style="font-size: 1.3rem; font-weight: 700; color: var(--text); text-align: center; margin: 1.2rem 0;">AI Predictions</div>
+
   <div class="map-section">
     <div id="map"></div>
     <!-- ✅ Dynamic AI insights inserted here -->
