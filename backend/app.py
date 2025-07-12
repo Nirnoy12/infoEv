@@ -122,3 +122,4 @@ def predict_time():
 
     except Exception as e:
         return jsonify({'error':str(e)}),500
+    
