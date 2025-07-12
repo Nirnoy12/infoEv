@@ -145,6 +145,7 @@ function optimizeStation(name, lat, lon, index) {
             outputDiv.innerHTML = `
                 <hr>
                 📊 <b>AI Prediction</b><br>
+                🔋Battery Swap Left: <b>NA</b></br>
                 🚗 Vehicle: <b>${vehicleType}</b><br>
                 📏 Distance: <b>${distanceKm.toFixed(2)} km</b>
             `;
