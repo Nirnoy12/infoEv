@@ -22,6 +22,7 @@
       --warning: #facc15;
       --danger: #ef4444;
       --muted: #94a3b8;
+      --hero-desc: #cfcfff;
     }
     body {
       margin: 0;
@@ -29,6 +30,12 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+    }
+    html.fullscreen-root, body.fullscreen-root {
+      height: 100% !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
     .header {
       display: flex;
@@ -109,14 +116,14 @@
     .hero-title {
       font-size: 2.8rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--text);
       margin-bottom: 0.5rem;
     }
     .hero-title .accent {
       color: var(--accent);
     }
     .hero-desc {
-      color: var(--muted);
+      color: var(--hero-desc);
       font-size: 1.15rem;
       margin-bottom: 2.5rem;
       max-width: 600px;
@@ -142,7 +149,7 @@
     .stat-value {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
     }
     .stat-label {
       color: var(--muted);
@@ -175,10 +182,45 @@
     .section-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #fff;
-      margin: 2.5rem 0 1.2rem 7vw;
-      text-align: left;
+      color: var(--text);
+      margin: 2.5rem 0 1.2rem 0;
+      text-align: center;
     }
+    .section-title-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.2rem 2.2rem;
+      margin: 2.5rem auto 1.2rem auto;
+      max-width: 500px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .fullscreen-map-section {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 2000 !important;
+      background: var(--bg) !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+      display: flex !important;
+      align-items: stretch !important;
+      justify-content: stretch !important;
+      padding: 0 !important;
+    }
+    .fullscreen-map {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+    }
+    .hidden { display: none !important; }
     .map-section {
       display: flex;
       flex-direction: column;
@@ -186,9 +228,8 @@
       margin-bottom: 2.5rem;
     }
     #map {
-      width: 90vw;
-      max-width: 900px;
-      height: 340px;
+      width: 100%;
+      height: 100%;
       border-radius: 18px;
       box-shadow: 0 4px 32px rgba(0,0,0,0.25);
       margin-bottom: 2rem;
@@ -219,7 +260,7 @@
     }
     .station-title {
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
       font-size: 1.1rem;
       display: flex;
       align-items: center;
@@ -235,7 +276,7 @@
       gap: 1.2rem;
     }
     .wait-time {
-      color: #fff;
+      color: var(--text);
       font-weight: 600;
       font-size: 1rem;
       background: var(--stat-bg);
@@ -256,6 +297,22 @@
     .status-available {
       background: var(--success);
     }
+    .fullscreen-exit-btn {
+      position: fixed;
+      top: 24px;
+      right: 32px;
+      z-index: 4000;
+      background: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 2.2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      transition: background 0.2s;
+    }
     @media (max-width: 700px) {
       .hero-title { font-size: 2rem; }
       .stats { flex-direction: column; gap: 1rem; }
@@ -265,7 +322,7 @@
     }
   </style>
 </head>
-<div class="speedometer" id="speed-display">Speed: 0 km/h</div>
+
 
 <div id="vehicle-popup" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
  background:var(--card-bg); border:1px solid var(--stat-border); padding:1rem 2rem; border-radius:12px;
@@ -295,31 +352,18 @@
     </div>
   </div>
   <div class="hero">
-    <div class="hero-title">Smart EV Charging <span class="accent">Made Simple</span></div>
+    <div class="hero-title">Charge Smart</div>
     <div class="hero-desc">
       Reduce wait times, optimize routes, and find the perfect charging station with our AI-powered platform. Experience the future of electric vehicle infrastructure.
     </div>
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-value" id="avg-wait-time">--</div>
-        <div class="stat-label">Avg Wait Time</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="active-stations">--</div>
-        <div class="stat-label">Active Stations</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">1.2k</div>
-        <div class="stat-label">Daily Users</div>
-      </div>
-    </div>
     <div class="nav-btns">
-      <button class="nav-btn selected">📍 Station Map</button>
-      <button class="nav-btn">🗺️ Route Optimizer</button>
-      <button class="nav-btn">🤖 AI Predictions</button>
     </div>
   </div>
-  <div class="section-title">Nearby EV Stations</div>
+  <div class="section-title-card">
+    <div class="section-title">EV Stations Close To You</div>
+    <button id="fullscreen-map-btn" class="nav-btn" style="margin-top: 1rem;">Full Screen Map</button>
+  </div>
+  <div class="ai-predictions-title" style="font-size: 1.3rem; font-weight: 700; color: var(--text); text-align: center; margin: 1.2rem 0;">AI Predictions</div>
   <div class="map-section">
     <div id="map"></div>
     <div class="stations-list">
@@ -345,6 +389,7 @@
       </div>
     </div>
   </div>
+  <div id="fullscreen-overlay" style="display:none;"></div>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>

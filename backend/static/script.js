@@ -122,12 +122,7 @@ if ("geolocation" in navigator) {
             const lon = pos.coords.longitude;
             const currentTimestamp = Date.now();
 
-            if (prevLatLng && prevTimestamp) {
-                const distance = map.distance(prevLatLng, L.latLng(lat, lon)); // meters
-                const timeElapsed = (currentTimestamp - prevTimestamp) / 1000; // seconds
-                const speedKmph = ((distance / timeElapsed) * 3.6).toFixed(2);
-                document.getElementById("speed-display").innerText = `Speed: ${speedKmph} km/h`;
-            }
+
 
             prevLatLng = L.latLng(lat, lon);
             prevTimestamp = currentTimestamp;
@@ -149,12 +144,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     lightBtn.addEventListener('click', () => {
         document.documentElement.style.setProperty('--bg', '#f8f9fa');
-        document.documentElement.style.setProperty('--text', '#000');
+        document.documentElement.style.setProperty('--text', '#222');
+        document.documentElement.style.setProperty('--muted', '#555');
+        document.documentElement.style.setProperty('--primary', '#5b6fff');
+        document.documentElement.style.setProperty('--accent', '#7c5fd4');
         document.documentElement.style.setProperty('--card-bg', '#fff');
         document.documentElement.style.setProperty('--stat-bg', '#f1f3f5');
         document.documentElement.style.setProperty('--stat-border', '#ced4da');
         document.documentElement.style.setProperty('--button-bg', '#4f46e5');
         document.documentElement.style.setProperty('--button-text', '#fff');
+        document.documentElement.style.setProperty('--hero-desc', '#555');
     });
 
     darkBtn.addEventListener('click', () => {
@@ -165,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.style.setProperty('--stat-border', '#23263a');
         document.documentElement.style.setProperty('--button-bg', '#2563eb');
         document.documentElement.style.setProperty('--button-text', '#fff');
+        document.documentElement.style.setProperty('--hero-desc', '#cfcfff');
     });
 
     // Vehicle popup
@@ -188,5 +188,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("📍 Showing nearby EV stations on map.");
             }
         });
+    });
+
+    // Full Screen Map toggle
+    const fullscreenBtn = document.getElementById('fullscreen-map-btn');
+    const mapDiv = document.getElementById('map');
+    let isFullscreen = false;
+    const mapSection = mapDiv.parentElement;
+    const header = document.querySelector('.header');
+    const sectionTitleCard = document.querySelector('.section-title-card');
+    const fullscreenOverlay = document.getElementById('fullscreen-overlay');
+    const originalMapParent = mapDiv.parentElement;
+    let floatingExitBtn = null;
+    fullscreenBtn.addEventListener('click', () => {
+        isFullscreen = !isFullscreen;
+        if (isFullscreen) {
+            fullscreenOverlay.appendChild(mapDiv);
+            fullscreenOverlay.style.display = 'flex';
+            fullscreenOverlay.style.position = 'fixed';
+            fullscreenOverlay.style.top = '0';
+            fullscreenOverlay.style.left = '0';
+            fullscreenOverlay.style.width = '100vw';
+            fullscreenOverlay.style.height = '100vh';
+            fullscreenOverlay.style.zIndex = '3000';
+            fullscreenOverlay.style.background = 'var(--bg)';
+            mapDiv.style.width = '100vw';
+            mapDiv.style.height = '100vh';
+            mapDiv.style.margin = '0';
+            mapDiv.style.borderRadius = '0';
+            if (header) header.classList.add('hidden');
+            // Do not hide sectionTitleCard
+            document.documentElement.classList.add('fullscreen-root');
+            document.body.classList.add('fullscreen-root');
+            // Create floating exit button
+            floatingExitBtn = document.createElement('button');
+            floatingExitBtn.className = 'fullscreen-exit-btn';
+            floatingExitBtn.textContent = 'Exit Full Screen';
+            floatingExitBtn.onclick = () => fullscreenBtn.click();
+            fullscreenOverlay.appendChild(floatingExitBtn);
+        } else {
+            originalMapParent.appendChild(mapDiv);
+            fullscreenOverlay.style.display = 'none';
+            mapDiv.style.width = '';
+            mapDiv.style.height = '';
+            mapDiv.style.margin = '';
+            mapDiv.style.borderRadius = '';
+            if (header) header.classList.remove('hidden');
+            // Do not show sectionTitleCard
+            document.documentElement.classList.remove('fullscreen-root');
+            document.body.classList.remove('fullscreen-root');
+            // Remove floating exit button
+            if (floatingExitBtn) {
+                floatingExitBtn.remove();
+                floatingExitBtn = null;
+            }
+        }
+        setTimeout(() => { map.invalidateSize(); }, 300);
     });
 });
