@@ -140,3 +140,53 @@ if ("geolocation" in navigator) {
 } else {
     alert("Geolocation not supported.");
 }
+
+// DOM Ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Theme toggle
+    const lightBtn = document.querySelector('button[title="Light Mode"]');
+    const darkBtn = document.querySelector('button[title="Dark Mode"]');
+
+    lightBtn.addEventListener('click', () => {
+        document.documentElement.style.setProperty('--bg', '#f8f9fa');
+        document.documentElement.style.setProperty('--text', '#000');
+        document.documentElement.style.setProperty('--card-bg', '#fff');
+        document.documentElement.style.setProperty('--stat-bg', '#f1f3f5');
+        document.documentElement.style.setProperty('--stat-border', '#ced4da');
+        document.documentElement.style.setProperty('--button-bg', '#4f46e5');
+        document.documentElement.style.setProperty('--button-text', '#fff');
+    });
+
+    darkBtn.addEventListener('click', () => {
+        document.documentElement.style.setProperty('--bg', '#101322');
+        document.documentElement.style.setProperty('--text', '#e6e6f0');
+        document.documentElement.style.setProperty('--card-bg', '#181c2f');
+        document.documentElement.style.setProperty('--stat-bg', '#181c2f');
+        document.documentElement.style.setProperty('--stat-border', '#23263a');
+        document.documentElement.style.setProperty('--button-bg', '#2563eb');
+        document.documentElement.style.setProperty('--button-text', '#fff');
+    });
+
+    // Vehicle popup
+    document.querySelector('.vehicle-btn').addEventListener('click', () => {
+        const popup = document.getElementById("vehicle-popup");
+        popup.style.display = 'block';
+    });
+
+    // Nav buttons behavior
+    const navBtns = document.querySelectorAll('.nav-btn');
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            navBtns.forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+
+            if (btn.textContent.includes('Route Optimizer')) {
+                alert("🗺️ Route Optimizer coming soon! For now, click 'Route to here' in station cards.");
+            } else if (btn.textContent.includes('AI Predictions')) {
+                alert("🤖 AI Predictions Dashboard coming soon. Stay tuned!");
+            } else if (btn.textContent.includes('Station Map')) {
+                alert("📍 Showing nearby EV stations on map.");
+            }
+        });
+    });
+});

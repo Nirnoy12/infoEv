@@ -265,6 +265,19 @@
     }
   </style>
 </head>
+<div class="speedometer" id="speed-display">Speed: 0 km/h</div>
+
+<div id="vehicle-popup" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
+ background:var(--card-bg); border:1px solid var(--stat-border); padding:1rem 2rem; border-radius:12px;
+ color:var(--text); z-index:999; box-shadow:0 0 20px rgba(0,0,0,0.3);">
+  <h3>🚗 My Vehicle</h3>
+  <p>Battery: 85%</p>
+  <p>Range: 220km</p>
+  <button onclick="document.getElementById('vehicle-popup').style.display='none'"
+          style="margin-top:10px; padding:6px 12px; background:var(--button-bg); color:white; border:none;
+           border-radius:6px;">Close</button>
+</div>
+
 <body>
   <div class="header">
     <div class="header-left">

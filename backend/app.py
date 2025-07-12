@@ -87,3 +87,38 @@ def optimize_station():
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
+
+from flask import request, jsonify
+import numpy as np
+import pandas as pd
+from flask_cors import CORS
+from tensorflow.keras.models import load_model
+
+# Enable cross-origin requests (for JS fetch)
+CORS(app)
+
+# 🔁 Load the Keras model
+model = load_model("model_ev.h5", compile=False)
+
+@app.route('/predict_time', methods=['POST'])
+def predict_time():
+    try:
+        data = request.get_json()
+        vehicle_type = data.get('vehicle_type')
+        distance = float(data.get('distance'))
+
+        if vehicle_type not in ['Car', 'Bike', 'Scooter']:
+            return jsonify({'error': 'Invalid vehicle type'}), 400
+
+        # Encode vehicle_type to integer (same as training)
+        type_map = {'Scooter': 0, 'Bike': 1, 'Car': 2}
+        vehicle_encoded = type_map[vehicle_type]
+
+        # 🔢 Model expects shape (1, 1, 2): [ [ [vehicle_type, distance] ] ]
+        input_array = np.array([[vehicle_encoded, distance]], dtype=float).reshape(1, 1, 2)
+        prediction = model.predict(input_array)[0][0]
+
+        return jsonify({'predicted_time_min': round(float(prediction), 2)})
+
+    except Exception as e:
+        return jsonify({'error':str(e)}),500

@@ -90,3 +90,17 @@ body, html {
   cursor: pointer;
   box-shadow: 0 0 8px rgba(0,255,173,0.3);
 }
+
+/* Ensure speed display stays visible */
+#speed-display {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 999;
+  font-size: 16px;
+  background-color: rgba(0,0,0,0.7);
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--success);
+  font-weight: bold;
+}
