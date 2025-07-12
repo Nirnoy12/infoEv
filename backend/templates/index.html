@@ -248,23 +248,15 @@
       border-radius: 14px;
       padding: 1.1rem 1.5rem;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 0.5rem;
       box-shadow: 0 2px 12px rgba(0,0,0,0.10);
       border: 1px solid var(--stat-border);
-    }
-    .station-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
     }
     .station-title {
       font-weight: 700;
       color: var(--text);
       font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
     .station-meta {
       color: var(--muted);
@@ -336,6 +328,12 @@
 </div>
 
 <body>
+  <select id="vehicle-type" style="position: fixed; top: 80px; right: 20px; z-index: 1000;">
+    <option value="Car">🚗 Car</option>
+    <option value="Bike">🏍️ Bike</option>
+    <option value="Scooter">🛵 Scooter</option>
+  </select>
+
   <div class="header">
     <div class="header-left">
       <div class="logo">⚡</div>
@@ -351,14 +349,19 @@
       <button class="vehicle-btn">🚗 My Vehicle</button>
     </div>
   </div>
+
   <div class="hero">
     <div class="hero-title">Charge Smart</div>
     <div class="hero-desc">
       Reduce wait times, optimize routes, and find the perfect charging station with our AI-powered platform. Experience the future of electric vehicle infrastructure.
     </div>
+    <div class="stats">
+    </div>
     <div class="nav-btns">
     </div>
   </div>
+
+  <div class="section-title">Nearby EV Stations</div>
   <div class="section-title-card">
     <div class="section-title">EV Stations Close To You</div>
     <button id="fullscreen-map-btn" class="nav-btn" style="margin-top: 1rem;">Full Screen Map</button>
@@ -366,29 +369,10 @@
   <div class="ai-predictions-title" style="font-size: 1.3rem; font-weight: 700; color: var(--text); text-align: center; margin: 1.2rem 0;">AI Predictions</div>
   <div class="map-section">
     <div id="map"></div>
-    <div class="stations-list">
-      <div class="station-card">
-        <div class="station-info">
-          <div class="station-title">⚡ Central Mall Charging Hub</div>
-          <div class="station-meta">0.8km away • 150kW</div>
-        </div>
-        <div class="station-status">
-          <span class="wait-time">5min wait</span>
-          <span class="status-dot status-limited"></span>Limited
-        </div>
-      </div>
-      <div class="station-card">
-        <div class="station-info">
-          <div class="station-title">🔋 Metro Station Battery Swap</div>
-          <div class="station-meta">1.2km away • 50kW</div>
-        </div>
-        <div class="station-status">
-          <span class="wait-time">12min wait</span>
-          <span class="status-dot status-limited"></span>Limited
-        </div>
-      </div>
-    </div>
+    <!-- ✅ Dynamic AI insights inserted here -->
+    <div id="ai-insights" class="stations-list"></div>
   </div>
+
   <div id="fullscreen-overlay" style="display:none;"></div>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

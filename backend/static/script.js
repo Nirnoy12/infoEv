@@ -28,7 +28,7 @@ function drawRouteToStation(fromLatLng, toLatLng) {
         }
     }).addTo(map);
 
-    routeControl.on('routingerror', function(e) {
+    routeControl.on('routingerror', function (e) {
         console.error("Routing failed:", e);
     });
 }
@@ -71,6 +71,23 @@ socket.on('ev_stations', (data) => {
         marker.bindPopup(popupContent);
         evMarkers.push(marker);
         marker.addTo(map);
+        fetch('/ai_insight', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ stations: data.stations })
+})
+.then(res => res.json())
+.then(result => {
+    const insightDiv = document.getElementById("ai-insights");
+    insightDiv.innerHTML = `
+        <h3>🔍 AI Insights on Nearby EV Stations</h3>
+        <p>${result.insight}</p>
+    `;
+})
+.catch(err => {
+    console.error("Insight fetch failed:", err);
+});
+
     });
 
     // Auto route to nearest station
@@ -92,27 +109,56 @@ function selectStation(lat, lon) {
 // Called when "Smart Optimize" is clicked
 function optimizeStation(name, lat, lon, index) {
     const outputDiv = document.getElementById(`optimize-result-${index}`);
-    outputDiv.innerHTML = "🔄 Optimizing...";
+    outputDiv.innerHTML = "🔄 Predicting charging time...";
 
-    fetch('/optimize', {
+    // Get selected vehicle type
+    let vehicleType = "Car"; // fallback
+    const selector = document.querySelector("#vehicle-type");
+    if (selector && selector.value) {
+        vehicleType = selector.value;
+    }
+
+    const userLat = userMarker.getLatLng().lat;
+    const userLon = userMarker.getLatLng().lng;
+
+    // Calculate distance (Haversine formula)
+    const R = 6371;
+    const dLat = (lat - userLat) * Math.PI / 180;
+    const dLon = (lon - userLon) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(userLat * Math.PI / 180) * Math.cos(lat * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distanceKm = R * c;
+
+    fetch('/predict_time', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, lat, lon })
-    }).then(res => res.json())
-      .then(data => {
-          outputDiv.innerHTML = `
-              <hr>
-              📊 <b>AI Insights</b><br>
-              ⏱ Optimal Slot: <b>${data.slot}</b><br>
-              🚗 ETA: <b>${data.eta} mins</b><br>
-              🔄 Battery Swaps: <b>${data.swaps_available}</b>
-          `;
-      })
-      .catch(err => {
-          console.error("AI Error:", err);
-          outputDiv.innerHTML = "❌ Optimization failed.";
-      });
+        body: JSON.stringify({
+            vehicle_type: vehicleType,
+            distance: distanceKm
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.predicted_time_min) {
+            outputDiv.innerHTML = `
+                <hr>
+                📊 <b>AI Prediction</b><br>
+                ⏱ Time to station: <b>${data.predicted_time_min} mins</b><br>
+                🚗 Vehicle: <b>${vehicleType}</b><br>
+                📏 Distance: <b>${distanceKm.toFixed(2)} km</b>
+            `;
+        } else {
+            outputDiv.innerHTML = "❌ Prediction failed.";
+        }
+    })
+    .catch(err => {
+        console.error("Prediction Error:", err);
+        outputDiv.innerHTML = "❌ Server error.";
+    });
 }
+
 
 // Track speed and location
 if ("geolocation" in navigator) {
@@ -122,7 +168,12 @@ if ("geolocation" in navigator) {
             const lon = pos.coords.longitude;
             const currentTimestamp = Date.now();
 
-
+            if (prevLatLng && prevTimestamp) {
+                const distance = map.distance(prevLatLng, L.latLng(lat, lon));
+                const timeElapsed = (currentTimestamp - prevTimestamp) / 1000;
+                const speedKmph = ((distance / timeElapsed) * 3.6).toFixed(2);
+                document.getElementById("speed-display").innerText = `Speed: ${speedKmph} km/h`;
+            }
 
             prevLatLng = L.latLng(lat, lon);
             prevTimestamp = currentTimestamp;
@@ -167,10 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.style.setProperty('--hero-desc', '#cfcfff');
     });
 
-    // Vehicle popup
+    // Vehicle popup (optional enhancement)
     document.querySelector('.vehicle-btn').addEventListener('click', () => {
         const popup = document.getElementById("vehicle-popup");
-        popup.style.display = 'block';
+        if (popup) popup.style.display = 'block';
     });
 
     // Nav buttons behavior
